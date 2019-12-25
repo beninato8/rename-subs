@@ -1,0 +1,3 @@
+#!/usr/local/bin/zsh
+
+mkvmerge -i "$@" | grep subtitles | grep PGS | awk '{print $3}' | tr -d :
