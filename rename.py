@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 import os
 import sys
 import re
@@ -36,6 +39,9 @@ if len(args) > 1:
     if 'E' in args:
         print('SRT format \'S01E23\'\n')
         srtChar = 'E'
+    if 'e' in args:
+        print('SRT format \'s01e23\'\n')
+        srtChar = 'e'
     if 'movie' in args:
         simrename = True
     if 'test' in args:
@@ -48,14 +54,16 @@ if srtChar == 'x':
 
 files = os.listdir()
 
-vids = [x for x in files if x[-3:] in ('mkv', 'mp4', 'avi')]
-subs = [x for x in files if x[-3:] == 'srt']
-
+vids = sorted([x for x in files if x[-3:].lower() in ('mkv', 'mp4', 'avi', 'm4v')])
+subs = sorted([x for x in files if x[-3:] == 'srt'])
+# print('vids', vids)
+# print('subs', subs)
 sims = most_similar(subs, vids)
 for subgroup in sims:
     if testmode:
         pct = "{:.0%}".format(subgroup[0])
-        print(subgroup[1], '\n\twas most similar to (' + pct + ')\n' + subgroup[2])
+        print(subgroup[1], '\n\twas most similar (%s) to\n' % pct + subgroup[2])
+        print()
     if simrename:
         os.rename(subgroup[1], subgroup[2][:-3]+'srt')
         print(subgroup[1])
@@ -64,10 +72,9 @@ for subgroup in sims:
         print()
 print()
 
-print('vids', vids)
-print('subs', subs)
 
-vidrgx = re.compile(r'[sS]\d+[eE]\d+')
+
+vidrgx = re.compile(r'[sS]\d+ ?[eE]\d+')
 
 for x in vids:
     if vidrgx.search(x):
