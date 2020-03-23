@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-
 import os
 import sys
 import re
 import random
 import string
 from difflib import SequenceMatcher
+from pprint import pprint
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
@@ -42,6 +42,9 @@ if len(args) > 1:
     if 'e' in args:
         print('SRT format \'s01e23\'\n')
         srtChar = 'e'
+    if '.' in args:
+        print('SRT format \'01.23\'\n')
+        srtChar = '.'
     if 'movie' in args:
         simrename = True
     if 'test' in args:
@@ -56,7 +59,7 @@ files = os.listdir()
 
 vids = sorted([x for x in files if x[-3:].lower() in ('mkv', 'mp4', 'avi', 'm4v')])
 subs = sorted([x for x in files if x[-3:] == 'srt'])
-# print('vids', vids)
+# pprint(subs)
 # print('subs', subs)
 sims = most_similar(subs, vids)
 for subgroup in sims:
@@ -73,7 +76,6 @@ for subgroup in sims:
 print()
 
 
-
 vidrgx = re.compile(r'[sS]\d+ ?[eE]\d+')
 
 for x in vids:
@@ -82,7 +84,7 @@ for x in vids:
         # print('x', x)
         # print('ep', ep)
         for sub in subs:
-            if ep in sub and sub[sub.rfind(ep)-1] == srtChar:
+            if f'{srtChar}{ep}' in sub:
                 print(str(sub))
                 if not testmode:
                     os.rename(str(sub), str(x)[:-3]+'srt')
