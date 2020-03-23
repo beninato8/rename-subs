@@ -35,6 +35,19 @@ content = re.sub(r"(?<=[^\d]):(?=[^\d])", r"", content)
 content = re.sub(r"\*", r"", content)
 content = re.sub(r"&quot;", r'"', content)
 content = re.sub(r"([^\d]+):\n?", r'', content)
+content = re.sub(r"(?<=[^\w])i(?=[^\w])", r'I', content)
+
+# title
+words = ['jedi', 'lothal', 'hera', 'ezra', 'imperial', 'wookies', 'vizago', 'r2', 'd2', 'zeb', 'kanan', 'lasan', 'lasat', 'senator organa', 'phantom', 'sabine']
+cap = {x:x.title() for x in words}
+for k,v in cap.items():
+    content = re.sub(fr'(?<=[^\w]){k}(?=[^\w])', v, content)
+
+# upper
+words = ['c-3po', 'c3-po', 'c3po']
+cap = {x:x.upper() for x in words}
+for k,v in cap.items():
+    content = re.sub(fr'(?<=[^\w]){k}(?=[^\w])', v, content)
 
 if any(x in content for x in blacklist):
     rgx = '|'.join(blacklist)
