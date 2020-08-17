@@ -16,8 +16,11 @@ def most_similar(a, b):
     for x in a:
         tmp = []
         for y in b:
-            tmp.append((similar(x, y), x, y))
-        ascore.append(max(tmp))
+            if y not in [item[2] for item in ascore]:
+                tmp.append((similar(x, y), x, y))
+        if tmp:
+            ascore.append(max(tmp))
+    # pprint(ascore)
     return ascore
 
 def jumbles():
